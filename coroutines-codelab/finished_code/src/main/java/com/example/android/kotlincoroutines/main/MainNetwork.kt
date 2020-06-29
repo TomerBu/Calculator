@@ -17,6 +17,9 @@
 package com.example.android.kotlincoroutines.main
 
 import com.example.android.kotlincoroutines.util.SkipNetworkInterceptor
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -33,7 +36,9 @@ private val service: MainNetwork by lazy {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
-    retrofit.create(MainNetwork::class.java)
+    return@lazy retrofit.create(MainNetwork::class.java)
+    //same as:
+    //retrofit.create(MainNetwork::class.java)
 }
 
 fun getNetworkService() = service
@@ -46,4 +51,17 @@ interface MainNetwork {
     suspend fun fetchNextTitle(): String
 }
 
+//private val scope = CoroutineScope(newSingleThreadContext("name"))
+//fun tt() {
+//    scope.launch {
+//        getNetworkService().fetchNextTitle()
+//    }
+//}
 
+fun tt() {
+    runBlocking {
+        withContext(Dispatchers.IO) {
+            val title:String = getNetworkService().fetchNextTitle()
+        }
+    }
+}

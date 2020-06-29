@@ -42,6 +42,8 @@ class TitleRepository(val network: MainNetwork, val titleDao: TitleDao) {
      * Observing this will not cause the title to be refreshed, use [TitleRepository.refreshTitle]
      * to refresh the title.
      */
+
+    //Convert from liveData<Title> to liveData<String>
     val title: LiveData<String?> = titleDao.titleLiveData.map { it?.title }
 
 

@@ -22,6 +22,8 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.lifecycle.observe
 import com.example.android.kotlincoroutines.R
@@ -51,6 +53,16 @@ class MainActivity : AppCompatActivity() {
         val viewModel = ViewModelProviders
                 .of(this, MainViewModel.FACTORY(repository))
                 .get(MainViewModel::class.java)
+
+        val ctor = ::MainViewModel
+        val fa = object : ViewModelProvider.NewInstanceFactory(){
+            @Suppress("UNCHECKED_CAST")
+            override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+                return ctor(repository) as T
+                //return super.create(modelClass)
+            }
+        }
+
 
         // When rootLayout is clicked call onMainViewClicked in ViewModel
         rootLayout.setOnClickListener {

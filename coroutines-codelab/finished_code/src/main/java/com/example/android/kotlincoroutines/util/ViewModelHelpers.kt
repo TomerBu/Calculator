@@ -18,6 +18,7 @@ package com.example.android.kotlincoroutines.util
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.example.android.kotlincoroutines.main.MainViewModel
 
 /**
  * Convenience factory to handle ViewModels with one parameter.
@@ -38,14 +39,26 @@ import androidx.lifecycle.ViewModelProvider
  * the constructor)
  * @return a function of one argument that returns ViewModelProvider.Factory for ViewModelProviders
  */
+
+//this func takes a constructor as parameter (the ctor signature is  (A arg)-> T ViewModel)
+//it returns a functions that takes one arg (A) and returns a ViewModelProvider.NewInstanceFactory
 fun <T : ViewModel, A> singleArgViewModelFactory(constructor: (A) -> T):
         (A) -> ViewModelProvider.NewInstanceFactory {
     return { arg: A ->
+        //anonymous object that extends ViewModelProvider.NewInstanceFactory and overrides create
+        //the create fun creates the view model for the factory
         object : ViewModelProvider.NewInstanceFactory() {
             @Suppress("UNCHECKED_CAST")
             override fun <V : ViewModel> create(modelClass: Class<V>): V {
-                return constructor(arg) as V
+                val vm =  constructor(arg) as V
+                return vm
             }
         }
     }
 }
+
+
+//The beauty is that the view model is not instantiating the repo it gets it via the parameter
+//and so the activity decides on the parameter and the view model don't init it/
+
+//dependency injection

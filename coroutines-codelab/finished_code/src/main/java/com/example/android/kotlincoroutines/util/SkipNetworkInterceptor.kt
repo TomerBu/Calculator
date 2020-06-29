@@ -48,9 +48,9 @@ class SkipNetworkInterceptor : Interceptor {
      * Stop the request from actually going out to the network.
      */
     override fun intercept(chain: Interceptor.Chain): Response {
-        pretendToBlockForNetworkRequest()
-        return if (wantRandomError()) {
-            makeErrorResult(chain.request())
+        pretendToBlockForNetworkRequest() //sleep 500
+        return if (wantRandomError()) { //i%5==0
+            makeErrorResult(chain.request()) //response with bad response code
         } else {
             makeOkResult(chain.request())
         }
